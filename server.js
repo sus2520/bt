@@ -1,17 +1,19 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const app = express();
+
+// Use Render's dynamic port
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Configure Nodemailer transporter with your Gmail credentials
+// Configure Nodemailer transporter with environment variables
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'adptai2024@gmail.com', // Your Gmail address
-        pass: 'Allahg0d'              // Your password (replace with App Password if 2FA is enabled)
+        user: process.env.EMAIL_USER || 'adptai2024@gmail.com', // Default for local testing
+        pass: process.env.EMAIL_PASS || 'Allahg0d'             // Default for local testing (replace with App Password)
     }
 });
 
@@ -26,7 +28,7 @@ app.post('/send-email', async (req, res) => {
 
     // Email options
     const mailOptions = {
-        from: 'adptai2024@gmail.com', // Sender address
+        from: process.env.EMAIL_USER || 'adptai2024@gmail.com',
         to: to,                       // Recipient (demo@gmail.com)
         subject: subject,             // Subject line
         text: text                    // Plain text body
